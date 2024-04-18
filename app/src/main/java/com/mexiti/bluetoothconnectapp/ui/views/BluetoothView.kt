@@ -117,7 +117,7 @@ fun BluetoothUI(connectStatus: MutableState<String>){
 @Composable
 fun BluetoothUIPreview(){
     val state = mutableStateOf("Correcto")
-BluetoothConnectAppTheme() {
+BluetoothConnectAppTheme {
     Surface {
         BluetoothUI(connectStatus =state )
     }
