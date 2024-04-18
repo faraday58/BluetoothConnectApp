@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.mexiti.bluetoothconnectapp.ui.theme.BluetoothConnectAppTheme
+import com.mexiti.bluetoothconnectapp.ui.views.BluetoothUI
 import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
@@ -116,7 +117,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MyUI(connectStatus = status)
+                    BluetoothUI(connectStatus = status)
 
                 }
             }
@@ -209,64 +210,3 @@ class DataExchange(mmSocket:BluetoothSocket): Thread(){
     }
 }
 
-@Composable
-fun MyUI(connectStatus: MutableState<String>){
-    val sensor = remember {
-        mutableStateOf("Nada")
-    }
-
-    Column {
-        Text(
-            text = connectStatus.value,
-            modifier = Modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-                .background(Color(0x80E2EBEA))
-                .padding(start = 16.dp)
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Row(
-            horizontalArrangement = Arrangement.SpaceAround,
-            modifier = Modifier.fillMaxWidth()
-            ){
-            Button(
-                onClick = {
-                    dataExchangeInstance?.write("A".toByteArray())
-                }) {
-                Text(text = "  LED ON  ")
-            }
-            Button(onClick = {
-                dataExchangeInstance?.write("B".toByteArray())
-            }) {
-                Text(text = " LED OFF  ")
-            }
-        }
-        Spacer(modifier = Modifier.height(16.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Button(onClick = {
-                val str = dataExchangeInstance?.read()
-                if(str != null){
-                    sensor.value = str
-                }else{
-                    connectStatus.value = "Nada"
-                }
-            },
-                modifier = Modifier.padding(start = 48.dp)
-                ) {
-                Text(text = " READ ")
-            }
-            Text(
-                text = sensor.value,
-                modifier = Modifier
-                    .padding(start = 96.dp)
-                    .background(Color(0x80E2EBEA))
-                    .padding(horizontal = 16.dp)
-            )
-        }
-
-    }
-
-}
