@@ -15,20 +15,11 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.mexiti.bluetoothconnectapp.ui.theme.BluetoothConnectAppTheme
@@ -172,7 +163,8 @@ class ConnectThread(private val monDevice:BluetoothDevice,
 
 var dataExchangeInstance: DataExchange? = null
 class DataExchange(mmSocket:BluetoothSocket): Thread(){
-    private val length = 5
+    private val length = 2
+
     private val mmInStream: InputStream = mmSocket.inputStream
     private val mmOutStream: OutputStream = mmSocket.outputStream
     private val mmBuffer: ByteArray = ByteArray(length)
@@ -194,14 +186,17 @@ class DataExchange(mmSocket:BluetoothSocket): Thread(){
         var numBytesReaded = 0
         try{
             while (numBytesReaded < length){
-                val number = mmInStream.read(mmBuffer,numBytesReaded,length -numBytesReaded)
+
+                val number = mmInStream.read(mmBuffer,numBytesReaded,length-numBytesReaded )
+
                 if(number == -1 )
                 {
                     break
                 }
                 numBytesReaded += number
             }
-            return String(mmBuffer,0,numBytesReaded)
+            Log.d("TAGByte","Number of reading bytes: " + numBytesReaded + "\nDato: " + mmBuffer[0])
+            return mmBuffer[0].toString()
 
         }
         catch (e:IOException){

@@ -90,7 +90,7 @@ fun BluetoothUI(connectStatus: MutableState<String>){
             Button(onClick = {
                 val str = dataExchangeInstance?.read()
                 if(str != null){
-                    sensor.value = str
+                    sensor.value = str + " [°C]"
                 }else{
                     connectStatus.value = "Sin mensaje"
                 }
