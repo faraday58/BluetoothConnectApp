@@ -1,16 +1,12 @@
 package com.mexiti.bluetoothconnectapp
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
-import android.bluetooth.BluetoothSocket
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,17 +18,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.mexiti.bluetoothconnectapp.controller.connectHC05
+import com.mexiti.bluetoothconnectapp.data.DataExchange
 import com.mexiti.bluetoothconnectapp.ui.theme.BluetoothConnectAppTheme
 import com.mexiti.bluetoothconnectapp.ui.views.BluetoothUI
-import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
-import java.lang.Exception
-import java.util.UUID
 
 const val CONNECTION_FAIlED: Int = 0
 const val CONNECTION_SUCCESS: Int =1
-private val MY_UUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+var dataExchangeInstance: DataExchange? = null
 
 
 class MainActivity : ComponentActivity() {
@@ -120,88 +113,4 @@ class MainActivity : ComponentActivity() {
 
 
 
-
-@SuppressLint("MissingPermission")
-private fun connectHC05(bluetoothAdapter: BluetoothAdapter?, handler: Handler):String{
-    val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
-    val hc05Device = pairedDevices?.find { it.name == "HC-05" }
-    if (hc05Device != null){
-        ConnectThread(hc05Device, handler = handler).start()
-        return ""
-    }else{
-        return "HC-05 No asociado\n"
-    }
-
-
-}
-
-@SuppressLint("MissingPermission")
-class ConnectThread(private val monDevice:BluetoothDevice,
-    private val handler: Handler): Thread(){
-        private val mmSocket:BluetoothSocket? by lazy(LazyThreadSafetyMode.NONE) {
-            monDevice.createRfcommSocketToServiceRecord(MY_UUID)
-        }
-
-    override fun run() {
-        mmSocket?.let {
-            socket ->
-            try {
-                socket.connect()
-                handler.obtainMessage(CONNECTION_SUCCESS).sendToTarget()
-
-            }
-            catch (e:Exception){
-                handler.obtainMessage(CONNECTION_FAIlED).sendToTarget()
-            }
-            dataExchangeInstance= DataExchange(socket)
-        }
-    }
-
-
-}
-
-
-var dataExchangeInstance: DataExchange? = null
-class DataExchange(mmSocket:BluetoothSocket): Thread(){
-    private val length = 2
-
-    private val mmInStream: InputStream = mmSocket.inputStream
-    private val mmOutStream: OutputStream = mmSocket.outputStream
-    private val mmBuffer: ByteArray = ByteArray(length)
-
-    fun write(bytes:ByteArray){
-        try {
-            mmOutStream.write(bytes)
-        }catch (error: Exception){
-            Log.e("Byte Error","Message didn't send")
-        }
-    }
-
-    fun read():String{
-        try {
-            mmOutStream.write("C".toByteArray())
-        }catch (error:Exception){
-            Log.e("Byte Error","Message didn't receive")
-        }
-        var numBytesReaded = 0
-        try{
-            while (numBytesReaded < length){
-
-                val number = mmInStream.read(mmBuffer,numBytesReaded,length-numBytesReaded )
-
-                if(number == -1 )
-                {
-                    break
-                }
-                numBytesReaded += number
-            }
-            Log.d("TAGByte","Number of reading bytes: " + numBytesReaded + "\nDato: " + mmBuffer[0])
-            return mmBuffer[0].toString()
-
-        }
-        catch (e:IOException){
-            return "error"
-        }
-    }
-}
 
