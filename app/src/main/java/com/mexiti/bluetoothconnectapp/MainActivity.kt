@@ -26,8 +26,6 @@ import com.mexiti.bluetoothconnectapp.ui.views.BluetoothUI
 const val CONNECTION_FAIlED: Int = 0
 const val CONNECTION_SUCCESS: Int =1
 var dataExchangeInstance: DataExchange? = null
-
-
 class MainActivity : ComponentActivity() {
 
     private lateinit var bluetoothManager: BluetoothManager
@@ -68,7 +66,6 @@ class MainActivity : ComponentActivity() {
             }
 
         }
-
         when{
             ContextCompat.checkSelfPermission(
                 applicationContext,Manifest.permission.BLUETOOTH) ==
@@ -88,10 +85,7 @@ class MainActivity : ComponentActivity() {
                     Manifest.permission.BLUETOOTH
                 )
             }
-
-
         }
-
 
 
         setContent {

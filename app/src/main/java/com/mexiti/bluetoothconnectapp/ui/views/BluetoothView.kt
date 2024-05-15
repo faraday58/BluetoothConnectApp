@@ -55,18 +55,14 @@ fun BluetoothUI(connectStatus: MutableState<String>){
                 .padding(start = 16.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
+
         Row(
             horizontalArrangement = Arrangement.SpaceAround,
             modifier = Modifier.fillMaxWidth()
         ){
-
-
             Text(text = switchControl)
-
             Switch(checked = checked ,
-
                 onCheckedChange = {
-                    
                     if (!checked){
                         switchControl = "LED ON"
                         dataExchangeInstance?.write("A".toByteArray())
@@ -80,9 +76,9 @@ fun BluetoothUI(connectStatus: MutableState<String>){
                 }
             )
 
-
         }
         Spacer(modifier = Modifier.height(16.dp))
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
@@ -123,7 +119,5 @@ BluetoothConnectAppTheme {
     }
 
 }
-
-
 
 }

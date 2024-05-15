@@ -12,7 +12,6 @@ import java.lang.Exception
 import java.util.UUID
 
 private val MY_UUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
-
 @SuppressLint("MissingPermission")
 class ConnectThread(private val monDevice: BluetoothDevice,
                     private val handler: Handler
@@ -35,7 +34,6 @@ class ConnectThread(private val monDevice: BluetoothDevice,
             dataExchangeInstance = DataExchange(socket)
         }
     }
-
 
 }
 

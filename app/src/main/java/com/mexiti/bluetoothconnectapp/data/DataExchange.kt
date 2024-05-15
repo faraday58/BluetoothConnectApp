@@ -23,11 +23,6 @@ class DataExchange(mmSocket: BluetoothSocket): Thread(){
     }
 
     fun read():String{
-        try {
-            mmOutStream.write("C".toByteArray())
-        }catch (error: Exception){
-            Log.e("Byte Error","Message didn't receive")
-        }
         var numBytesReaded = 0
         try{
             while (numBytesReaded < length){
@@ -47,6 +42,12 @@ class DataExchange(mmSocket: BluetoothSocket): Thread(){
         catch (e: IOException){
             return "error"
         }
+        /*
+        try {
+            mmOutStream.write("C".toByteArray())
+        }catch (error: Exception){
+            Log.e("Byte Error","Message didn't receive")
+        }*/
     }
 }
 
