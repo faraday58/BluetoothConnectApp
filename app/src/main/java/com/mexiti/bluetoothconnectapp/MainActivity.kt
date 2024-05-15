@@ -77,7 +77,7 @@ class MainActivity : ComponentActivity() {
             ActivityCompat.shouldShowRequestPermissionRationale(
                 this,Manifest.permission.BLUETOOTH
             ) ->{
-                Toast.makeText(applicationContext,"Debes de darme los permisos idiota, sino como quieres que funcione",Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext,"Es importante dar los permisos para poder conectarse a con Arduino",Toast.LENGTH_LONG).show()
             }
 
             else ->{
